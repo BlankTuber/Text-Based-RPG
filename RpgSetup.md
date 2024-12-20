@@ -1,11 +1,11 @@
-# Game Content Structure Design
+# Cross-Language Text RPG Game Content Structure Design
 
 ## 1. Core Data Files Structure
 
 ```md
 game-content/
 ├── world/
-│   ├── locations.json        # All game locations and connections
+│   ├── locations.json       # All game locations and connections
 │   ├── npcs.json            # NPC definitions
 │   └── items.json           # Item definitions
 ├── gameplay/
@@ -29,7 +29,7 @@ game-content/
 
 ### Location Definition
 
-```json
+``` json
 {
   "locations": {
     "town_square": {
@@ -62,7 +62,7 @@ game-content/
 
 ### NPC Definition
 
-```json
+``` json
 {
   "npcs": {
     "merchant_joe": {
@@ -86,7 +86,7 @@ game-content/
 
 ### Quest Definition
 
-```json
+``` json
 {
   "quests": {
     "fetch_supplies": {
@@ -137,7 +137,7 @@ game-content/
 
 ### Combat Rules
 
-```json
+``` json
 {
   "combat": {
     "formulas": {
@@ -166,7 +166,7 @@ game-content/
 
 ### Character State
 
-```json
+``` json
 {
   "player": {
     "basic": {
@@ -216,7 +216,7 @@ game-content/
 
 ## 5. Query System
 
-```json
+``` json
 {
   "queries": {
     "available_actions": {
@@ -260,4 +260,25 @@ game-content/
     }
   }
 }
+```
+
+## 7. Technical Architecture
+
+```md
+project/
+├── common/
+│   ├── schemas/     # JSON schemas for game data
+│   ├── content/     # Shared game content
+│   └── tests/       # Common test scenarios
+├── go-implementation/
+│   ├── cmd/         # Entry points
+│   ├── internal/    # Game engine implementation
+│   └── pkg/         # Reusable packages
+├── rust-implementation/
+│   ├── src/
+│   │   ├── engine/  # Core game logic
+│   │   ├── systems/ # Game subsystems
+│   │   └── utils/   # Utility functions
+│   └── tests/
+└── tools/           # Shared development tools
 ```

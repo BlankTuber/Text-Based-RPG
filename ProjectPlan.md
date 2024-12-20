@@ -1,3 +1,4 @@
+
 # Cross-Language Text RPG Project Plan
 
 ## Project Overview
@@ -44,10 +45,12 @@ The goal is to create a text-based RPG system that can be implemented in multipl
    - JSON parsing and validation
    - Game state management
    - Basic command parser
+
 2. Core gameplay loops
    - Movement system
    - Basic combat
    - Inventory management
+
 3. Testing framework setup
 
 ### Rust Implementation
@@ -56,6 +59,7 @@ The goal is to create a text-based RPG system that can be implemented in multipl
    - Implement same interfaces
    - Ensure data structure compatibility
    - Set up similar testing framework
+
 2. Optimize for Rust idioms
    - Leverage ownership system
    - Implement error handling
@@ -94,25 +98,23 @@ The goal is to create a text-based RPG system that can be implemented in multipl
 
 ## Technical Architecture
 
-### Core Components
-
 ```md
 project/
 ├── common/
-│   ├── schemas/           # JSON schemas for game data
-│   ├── content/           # Shared game content
-│   └── tests/            # Common test scenarios
+│   ├── schemas/     # JSON schemas for game data
+│   ├── content/     # Shared game content
+│   └── tests/       # Common test scenarios
 ├── go-implementation/
-│   ├── cmd/              # Entry points
-│   ├── internal/         # Game engine implementation
-│   └── pkg/              # Reusable packages
+│   ├── cmd/         # Entry points
+│   ├── internal/    # Game engine implementation
+│   └── pkg/         # Reusable packages
 ├── rust-implementation/
 │   ├── src/
-│   │   ├── engine/      # Core game logic
-│   │   ├── systems/     # Game subsystems
-│   │   └── utils/       # Utility functions
+│   │   ├── engine/  # Core game logic
+│   │   ├── systems/ # Game subsystems
+│   │   └── utils/   # Utility functions
 │   └── tests/
-└── tools/                # Shared development tools
+└── tools/           # Shared development tools
 ```
 
 ## Success Criteria
@@ -146,3 +148,30 @@ project/
 3. Language-specific limitations
 4. Testing coverage gaps
 5. Content validation challenges
+
+## Implementation Guidelines
+
+1. Content Loading
+   - Load all static content at startup
+   - Cache frequently accessed data
+   - Use lazy loading for dialogue and events
+
+2. State Management
+   - Keep current state in memory
+   - Save on significant events
+   - Track state changes for saving
+
+3. Content Validation
+   - Validate all connections are bi-directional
+   - Check quest completion paths
+   - Verify item availability
+   - Ensure all referenced IDs exist
+
+4. Error Handling
+   - Provide default values
+   - Log invalid references
+   - Graceful fallbacks for missing content
+
+## Query and Event Systems
+
+Implement flexible query and event systems as defined in the RpgSetup.md file to handle game logic and state changes efficiently.
