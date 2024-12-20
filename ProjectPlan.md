@@ -8,11 +8,14 @@ project/
 │   │   ├── world/
 │   │   │   ├── locations.json
 │   │   │   ├── npcs.json
-│   │   │   └── items.json
+│   │   │   ├── items.json
+│   │   │   └── factions.json
 │   │   ├── gameplay/
 │   │   │   ├── classes.json
 │   │   │   ├── skills.json
-│   │   │   └── combat-rules.json
+│   │   │   ├── combat-rules.json
+│   │   │   ├── status-effects.json
+│   │   │   └── crafting.json
 │   │   ├── narrative/
 │   │   │   ├── quests/
 │   │   │   │   ├── main-quests.json
@@ -20,10 +23,15 @@ project/
 │   │   │   ├── dialogues/
 │   │   │   │   ├── npc-dialogues.json
 │   │   │   │   └── quest-dialogues.json
-│   │   │   └── events.json
-│   │   └── config/
-│   │       ├── game-constants.json
-│   │       └── progression.json
+│   │   │   ├── events.json
+│   │   │   └── lore.json
+│   │   ├── config/
+│   │   │   ├── game-constants.json
+│   │   │   ├── progression.json
+│   │   │   └── economy.json
+│   │   ├── assets/
+│   │   │   ├── ascii-art.json
+│   │   │   └── sound.json
 │   └── tests/
 ├── go-implementation/
 │   ├── cmd/
@@ -35,6 +43,12 @@ project/
 │   │   ├── systems/
 │   │   └── utils/
 │   └── tests/
+├── csharp-implementation/
+│   ├── src/
+│   │   ├── Engine/
+│   │   ├── Systems/
+│   │   └── Utils/
+│   └── Tests/
 └── tools/
 ```
 
