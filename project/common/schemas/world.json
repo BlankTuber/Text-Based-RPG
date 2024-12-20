@@ -1,0 +1,279 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "requirements": {
+            "type": "object",
+            "properties": {
+            "quest_stage": {
+                "type": ["string", "null"],
+                "description": "Required quest stage to access this content"
+            },
+            "min_level": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Minimum player level required"
+            },
+            "faction_reputation": {
+                "type": "object",
+                "patternProperties": {
+                    "^[a-zA-Z_]+$": {
+                        "type": "integer",
+                        "description": "Required reputation level with faction"
+                    }
+                }
+            }
+            }
+        },
+        "coordinate": {
+            "type": "object",
+            "properties": {
+                "x": { "type": "integer" },
+                "y": { "type": "integer" },
+                "z": { "type": "integer" }
+            },
+            "required": ["x", "y"]
+        }
+        },
+        "type": "object",
+        "properties": {
+        "locations": {
+            "type": "object",
+            "patternProperties": {
+            "^[a-z_]+$": {
+                "type": "object",
+                "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Display name of the location"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Detailed description of the location"
+                },
+                "connections": {
+                    "type": "object",
+                    "properties": {
+                        "north": { "type": "string" },
+                        "south": { "type": "string" },
+                        "east": { "type": "string" },
+                        "west": { "type": "string" },
+                        "up": { "type": "string" },
+                        "down": { "type": "string" }
+                    },
+                    "additionalProperties": false
+                },
+                "coordinates": { "$ref": "#/definitions/coordinate" },
+                "available_actions": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "npcs": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "List of NPC IDs present in this location"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": { "type": "string" },
+                        "spawn_rate": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                        }
+                    },
+                    "required": ["id"]
+                    }
+                },
+                "requirements": { "$ref": "#/definitions/requirements" },
+                "events": {
+                    "type": "object",
+                    "patternProperties": {
+                    "^[a-z_]+$": { "type": "string" }
+                    }
+                },
+                "ambient_text": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Random descriptive text shown while in location"
+                }
+                },
+                "required": ["name", "description"]
+            }
+            }
+        },
+        "npcs": {
+            "type": "object",
+            "patternProperties": {
+            "^[a-z_]+$": {
+                "type": "object",
+                "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "base_attitude": {
+                    "type": "string",
+                    "enum": ["hostile", "neutral", "friendly"]
+                },
+                "faction": { "type": "string" },
+                "dialogue_trees": {
+                    "type": "object",
+                    "patternProperties": {
+                    "^[a-z_]+$": { "type": "string" }
+                    }
+                },
+                "shop_inventory": { "type": "string" },
+                "quest_giver": { "type": "boolean" },
+                "available_quests": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "state_flags": {
+                    "type": "object",
+                    "patternProperties": {
+                    "^[a-z_]+$": { "type": "boolean" }
+                    }
+                },
+                "combat_stats": {
+                    "type": "object",
+                    "properties": {
+                        "level": { "type": "integer", "minimum": 1 },
+                        "hp": { "type": "integer", "minimum": 1 },
+                        "attack": { "type": "integer", "minimum": 0 },
+                        "defense": { "type": "integer", "minimum": 0 }
+                    }
+                },
+                "schedule": {
+                    "type": "object",
+                    "patternProperties": {
+                    "^[0-9]{2}:[0-9]{2}$": {
+                        "type": "object",
+                        "properties": {
+                            "location": { "type": "string" },
+                            "action": { "type": "string" }
+                        },
+                        "required": ["location"]
+                    }
+                    }
+                }
+                },
+                "required": ["name", "base_attitude"]
+            }
+            }
+        },
+        "items": {
+            "type": "object",
+            "patternProperties": {
+            "^[a-z_]+$": {
+                "type": "object",
+                "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["weapon", "armor", "consumable", "quest", "key", "crafting"]
+                },
+                "value": { "type": "integer", "minimum": 0 },
+                "weight": { "type": "number", "minimum": 0 },
+                "stats": {
+                    "type": "object",
+                    "properties": {
+                        "damage": { "type": "integer", "minimum": 0 },
+                        "armor": { "type": "integer", "minimum": 0 },
+                        "healing": { "type": "integer", "minimum": 0 }
+                    }
+                },
+                "requirements": { "$ref": "#/definitions/requirements" },
+                "effects": {
+                    "type": "array",
+                    "items": {
+                    "type": "object",
+                    "properties": {
+                        "type": { "type": "string" },
+                        "value": { "type": "number" },
+                        "duration": { "type": "integer", "minimum": 1 }
+                    },
+                    "required": ["type", "value"]
+                    }
+                },
+                "crafting": {
+                    "type": "object",
+                    "properties": {
+                    "ingredients": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "item": { "type": "string" },
+                                "amount": { "type": "integer", "minimum": 1 }
+                            },
+                            "required": ["item", "amount"]
+                        }
+                    },
+                    "skill_required": { "type": "string" },
+                    "min_skill_level": { "type": "integer", "minimum": 1 }
+                    }
+                }
+                },
+                "required": ["name", "description", "type"]
+            }
+            }
+        },
+        "factions": {
+            "type": "object",
+            "patternProperties": {
+            "^[a-z_]+$": {
+                "type": "object",
+                "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "relationships": {
+                    "type": "object",
+                    "patternProperties": {
+                    "^[a-z_]+$": {
+                        "type": "integer",
+                        "minimum": -100,
+                        "maximum": 100,
+                        "description": "Relationship value with other factions"
+                    }
+                    }
+                },
+                "reputation_levels": {
+                    "type": "object",
+                    "properties": {
+                        "hostile": { "type": "integer", "maximum": 0 },
+                        "unfriendly": { "type": "integer", "maximum": 0 },
+                        "neutral": { "type": "integer", "minimum": 0 },
+                        "friendly": { "type": "integer", "minimum": 0 },
+                        "honored": { "type": "integer", "minimum": 0 }
+                    },
+                    "required": ["hostile", "neutral", "honored"]
+                },
+                "base_reaction": {
+                    "type": "string",
+                    "enum": ["hostile", "neutral", "friendly"]
+                },
+                "territory": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "List of location IDs controlled by faction"
+                },
+                "leaders": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "List of NPC IDs who are faction leaders"
+                },
+                "quests": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "List of quest IDs associated with faction"
+                }
+                },
+                "required": ["name", "description", "base_reaction"]
+            }
+            }
+        }
+    },
+    "required": ["locations", "npcs", "items", "factions"]
+}

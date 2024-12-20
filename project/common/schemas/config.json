@@ -1,0 +1,291 @@
+{
+    "game-constants": {
+    "type": "object",
+    "required": ["game", "player", "world", "combat"],
+    "properties": {
+        "game": {
+        "type": "object",
+        "properties": {
+            "max_save_slots": { "type": "integer", "minimum": 1 },
+            "autosave_frequency": { "type": "integer", "minimum": 0 },
+            "max_inventory_size": { "type": "integer", "minimum": 1 },
+            "max_party_size": { "type": "integer", "minimum": 1 },
+            "max_level": { "type": "integer", "minimum": 1 },
+            "starting_location": { "type": "string" },
+            "default_difficulty": {
+            "type": "string",
+            "enum": ["easy", "normal", "hard"]
+            }
+        }
+        },
+        "player": {
+        "type": "object",
+        "properties": {
+            "starting_stats": {
+            "type": "object",
+            "properties": {
+                "hp": { "type": "integer", "minimum": 1 },
+                "mp": { "type": "integer", "minimum": 0 },
+                "strength": { "type": "integer", "minimum": 1 },
+                "dexterity": { "type": "integer", "minimum": 1 },
+                "intelligence": { "type": "integer", "minimum": 1 }
+            }
+            },
+            "starting_inventory": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                "item_id": { "type": "string" },
+                "quantity": { "type": "integer", "minimum": 1 }
+                }
+            }
+            },
+            "starting_equipment_slots": {
+            "type": "array",
+            "items": { "type": "string" }
+            }
+        }
+        },
+        "world": {
+        "type": "object",
+        "properties": {
+            "time": {
+            "type": "object",
+            "properties": {
+                "day_length": { "type": "integer", "minimum": 1 },
+                "start_hour": { "type": "integer", "minimum": 0, "maximum": 23 },
+                "night_start": { "type": "integer", "minimum": 0, "maximum": 23 },
+                "night_end": { "type": "integer", "minimum": 0, "maximum": 23 }
+            }
+            },
+            "weather": {
+            "type": "object",
+            "properties": {
+                "change_frequency": { "type": "integer", "minimum": 1 },
+                "effects_enabled": { "type": "boolean" }
+            }
+            }
+        }
+        },
+        "combat": {
+        "type": "object",
+        "properties": {
+            "max_combat_rounds": { "type": "integer", "minimum": 1 },
+            "flee_chance_base": { "type": "number", "minimum": 0, "maximum": 1 },
+            "critical_hit_multiplier": { "type": "number", "minimum": 1 },
+            "critical_hit_chance": { "type": "number", "minimum": 0, "maximum": 1 },
+            "min_damage": { "type": "integer", "minimum": 0 }
+        }
+        }
+    }
+    },
+    "progression": {
+    "type": "object",
+    "required": ["experience", "levels", "skills", "achievements"],
+    "properties": {
+        "experience": {
+        "type": "object",
+        "properties": {
+            "base_xp_requirement": { "type": "integer", "minimum": 1 },
+            "level_multiplier": { "type": "number", "minimum": 1 },
+            "xp_sources": {
+            "type": "object",
+            "properties": {
+                "combat": {
+                "type": "object",
+                "properties": {
+                    "base_monster_xp": { "type": "integer", "minimum": 0 },
+                    "level_difference_modifier": { "type": "number" }
+                }
+                },
+                "quests": {
+                "type": "object",
+                "properties": {
+                    "base_quest_xp": { "type": "integer", "minimum": 0 },
+                    "difficulty_multipliers": {
+                    "type": "object",
+                    "properties": {
+                        "easy": { "type": "number", "minimum": 0 },
+                        "normal": { "type": "number", "minimum": 0 },
+                        "hard": { "type": "number", "minimum": 0 }
+                    }
+                    }
+                }
+                },
+                "crafting": {
+                "type": "object",
+                "properties": {
+                    "base_craft_xp": { "type": "integer", "minimum": 0 },
+                    "quality_multipliers": {
+                    "type": "object",
+                    "properties": {
+                        "normal": { "type": "number", "minimum": 0 },
+                        "good": { "type": "number", "minimum": 0 },
+                        "excellent": { "type": "number", "minimum": 0 }
+                    }
+                    }
+                }
+                }
+            }
+            }
+        }
+        },
+        "levels": {
+        "type": "object",
+        "properties": {
+            "stat_increases": {
+            "type": "object",
+            "properties": {
+                "hp_per_level": { "type": "integer", "minimum": 0 },
+                "mp_per_level": { "type": "integer", "minimum": 0 },
+                "stat_points_per_level": { "type": "integer", "minimum": 0 }
+            }
+            },
+            "unlock_tiers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                "level": { "type": "integer", "minimum": 1 },
+                "unlocks": {
+                    "type": "array",
+                    "items": {
+                    "type": "string"
+                    }
+                }
+                }
+            }
+            }
+        }
+        },
+        "skills": {
+        "type": "object",
+        "properties": {
+            "max_skill_level": { "type": "integer", "minimum": 1 },
+            "skill_points_per_level": { "type": "integer", "minimum": 0 },
+            "experience_requirements": {
+            "type": "object",
+            "properties": {
+                "base_requirement": { "type": "integer", "minimum": 1 },
+                "level_multiplier": { "type": "number", "minimum": 1 }
+            }
+            }
+        }
+        },
+        "achievements": {
+        "type": "object",
+        "properties": {
+            "reward_types": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["title", "item", "stat_bonus", "skill_point", "currency"]
+            }
+            },
+            "difficulty_tiers": {
+            "type": "object",
+            "properties": {
+                "bronze": {
+                "type": "object",
+                "properties": {
+                    "reward_multiplier": { "type": "number", "minimum": 0 }
+                }
+                },
+                "silver": {
+                "type": "object",
+                "properties": {
+                    "reward_multiplier": { "type": "number", "minimum": 0 }
+                }
+                },
+                "gold": {
+                "type": "object",
+                "properties": {
+                    "reward_multiplier": { "type": "number", "minimum": 0 }
+                }
+                }
+            }
+            }
+        }
+        }
+    }
+    },
+    "economy": {
+    "type": "object",
+    "required": ["currency", "trading", "items"],
+    "properties": {
+        "currency": {
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "symbol": { "type": "string" },
+            "denominations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "integer", "minimum": 1 }
+                }
+            }
+            },
+            "starting_amount": { "type": "integer", "minimum": 0 }
+        }
+        },
+        "trading": {
+        "type": "object",
+        "properties": {
+            "buy_multiplier": { "type": "number", "minimum": 0 },
+            "sell_multiplier": { "type": "number", "minimum": 0 },
+            "reputation_effects": {
+            "type": "object",
+            "properties": {
+                "discount_per_level": { "type": "number", "minimum": 0 },
+                "max_discount": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+            },
+            "haggling": {
+            "type": "object",
+            "properties": {
+                "enabled": { "type": "boolean" },
+                "max_adjustment": { "type": "number", "minimum": 0 },
+                "success_chance_base": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+            }
+        }
+        },
+        "items": {
+        "type": "object",
+        "properties": {
+            "rarity_multipliers": {
+            "type": "object",
+            "properties": {
+                "common": { "type": "number", "minimum": 0 },
+                "uncommon": { "type": "number", "minimum": 0 },
+                "rare": { "type": "number", "minimum": 0 },
+                "epic": { "type": "number", "minimum": 0 },
+                "legendary": { "type": "number", "minimum": 0 }
+            }
+            },
+            "condition_effects": {
+            "type": "object",
+            "properties": {
+                "perfect": { "type": "number", "minimum": 0 },
+                "slightly_used": { "type": "number", "minimum": 0 },
+                "damaged": { "type": "number", "minimum": 0 },
+                "heavily_damaged": { "type": "number", "minimum": 0 }
+            }
+            },
+            "market_fluctuation": {
+            "type": "object",
+            "properties": {
+                "enabled": { "type": "boolean" },
+                "update_frequency": { "type": "integer", "minimum": 1 },
+                "max_change_percent": { "type": "number", "minimum": 0 }
+            }
+            }
+        }
+        }
+    }
+    }
+}

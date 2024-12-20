@@ -1,0 +1,134 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+    "ascii_art": {
+        "type": "object",
+        "properties": {
+        "ascii_art": {
+            "type": "object",
+            "patternProperties": {
+            "^[a-z0-9_]+$": {
+                "type": "object",
+                "required": ["name", "art", "categories"],
+                "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Display name of the ASCII art piece"
+                },
+                "art": {
+                    "type": "array",
+                    "items": {
+                    "type": "string"
+                    },
+                    "description": "Array of strings representing each line of the ASCII art"
+                },
+                "categories": {
+                    "type": "array",
+                    "items": {
+                    "type": "string",
+                    "enum": ["combat", "location", "character", "item", "effect", "ui"]
+                    },
+                    "description": "Categories this art piece belongs to"
+                },
+                "variants": {
+                    "type": "object",
+                    "patternProperties": {
+                    "^[a-z0-9_]+$": {
+                        "type": "array",
+                        "items": {
+                        "type": "string"
+                        }
+                    }
+                    },
+                    "description": "Optional variations of the art (e.g., damaged, alternate forms)"
+                },
+                "width": {
+                    "type": "integer",
+                    "description": "Width of the art in characters"
+                },
+                "height": {
+                    "type": "integer",
+                    "description": "Height of the art in lines"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                    "type": "string"
+                    },
+                    "description": "Additional tags for searching and filtering"
+                }
+                }
+            }
+            }
+        }
+        }
+    },
+    "sound": {
+        "type": "object",
+        "properties": {
+        "sound": {
+            "type": "object",
+            "patternProperties": {
+            "^[a-z0-9_]+$": {
+                "type": "object",
+                "required": ["name", "type", "representation"],
+                "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Display name of the sound effect"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["ambient", "effect", "combat", "ui", "music"],
+                    "description": "Type of sound"
+                },
+                "representation": {
+                    "type": "string",
+                    "description": "Text representation of the sound (e.g., *clash*, *swoosh*)"
+                },
+                "variants": {
+                    "type": "object",
+                    "patternProperties": {
+                    "^[a-z0-9_]+$": {
+                        "type": "string"
+                    }
+                    },
+                    "description": "Optional variations of the sound representation"
+                },
+                "volume": {
+                    "type": "string",
+                    "enum": ["quiet", "normal", "loud"],
+                    "default": "normal",
+                    "description": "Relative volume level of the sound"
+                },
+                "duration": {
+                    "type": "string",
+                    "enum": ["brief", "short", "medium", "long"],
+                    "default": "brief",
+                    "description": "Duration category of the sound"
+                },
+                "repeatable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether the sound can be repeated in quick succession"
+                },
+                "cooldown": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Minimum turns between repeated plays"
+                },
+                "conditions": {
+                    "type": "array",
+                    "items": {
+                    "type": "string"
+                    },
+                    "description": "Conditions that must be met to play this sound"
+                }
+                }
+            }
+            }
+        }
+        }
+    }
+    }
+}

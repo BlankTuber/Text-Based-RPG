@@ -1,0 +1,374 @@
+{
+    "classes": {
+    "type": "object",
+    "properties": {
+        "classes": {
+        "type": "object",
+        "patternProperties": {
+            "^[a-z_]+$": {
+            "type": "object",
+            "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "base_stats": {
+                "type": "object",
+                "properties": {
+                    "hp": { "type": "integer", "minimum": 1 },
+                    "mp": { "type": "integer", "minimum": 0 },
+                    "strength": { "type": "integer", "minimum": 1 },
+                    "dexterity": { "type": "integer", "minimum": 1 },
+                    "intelligence": { "type": "integer", "minimum": 1 },
+                    "vitality": { "type": "integer", "minimum": 1 }
+                },
+                "required": ["hp", "mp", "strength", "dexterity", "intelligence", "vitality"]
+                },
+                "starting_equipment": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                    "item_id": { "type": "string" },
+                    "amount": { "type": "integer", "minimum": 1 }
+                    },
+                    "required": ["item_id"]
+                }
+                },
+                "starting_skills": {
+                "type": "array",
+                "items": { "type": "string" }
+                },
+                "skill_tree": {
+                "type": "object",
+                "properties": {
+                    "available_skills": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                    },
+                    "skill_requirements": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[a-z_]+$": {
+                        "type": "object",
+                        "properties": {
+                            "level": { "type": "integer", "minimum": 1 },
+                            "prerequisites": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                            }
+                        }
+                        }
+                    }
+                    }
+                }
+                },
+                "level_progression": {
+                "type": "object",
+                "properties": {
+                    "xp_formula": { "type": "string" },
+                    "stat_growth": {
+                    "type": "object",
+                    "properties": {
+                        "hp": { "type": "integer" },
+                        "mp": { "type": "integer" },
+                        "strength": { "type": "number" },
+                        "dexterity": { "type": "number" },
+                        "intelligence": { "type": "number" },
+                        "vitality": { "type": "number" }
+                    }
+                    }
+                }
+                }
+            },
+            "required": ["name", "description", "base_stats", "starting_skills"]
+            }
+        }
+        }
+    }
+    },
+    "skills": {
+    "type": "object",
+    "properties": {
+        "skills": {
+        "type": "object",
+        "patternProperties": {
+            "^[a-z_]+$": {
+            "type": "object",
+            "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                "type": "string",
+                "enum": ["active", "passive", "toggle"]
+                },
+                "target_type": {
+                "type": "string",
+                "enum": ["self", "single_enemy", "all_enemies", "single_ally", "all_allies", "area"]
+                },
+                "requirements": {
+                "type": "object",
+                "properties": {
+                    "level": { "type": "integer", "minimum": 1 },
+                    "stats": {
+                    "type": "object",
+                    "properties": {
+                        "strength": { "type": "integer", "minimum": 0 },
+                        "dexterity": { "type": "integer", "minimum": 0 },
+                        "intelligence": { "type": "integer", "minimum": 0 }
+                    }
+                    },
+                    "items": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                    }
+                }
+                },
+                "effects": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                    "type": { 
+                        "type": "string",
+                        "enum": ["damage", "heal", "buff", "debuff", "status"]
+                    },
+                    "value_formula": { "type": "string" },
+                    "duration": { "type": "integer" },
+                    "status_effect": { "type": "string" }
+                    },
+                    "required": ["type", "value_formula"]
+                }
+                },
+                "cost": {
+                "type": "object",
+                "properties": {
+                    "mp": { "type": "integer", "minimum": 0 },
+                    "hp": { "type": "integer", "minimum": 0 },
+                    "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                        "item_id": { "type": "string" },
+                        "amount": { "type": "integer", "minimum": 1 }
+                        }
+                    }
+                    }
+                }
+                },
+                "cooldown": { "type": "integer", "minimum": 0 }
+            },
+            "required": ["name", "description", "type", "effects"]
+            }
+        }
+        }
+    }
+    },
+    "combat_rules": {
+    "type": "object",
+    "properties": {
+        "turn_order": {
+        "type": "object",
+        "properties": {
+            "priority_stats": {
+            "type": "array",
+            "items": { "type": "string" }
+            },
+            "initiative_formula": { "type": "string" }
+        }
+        },
+        "damage_formulas": {
+        "type": "object",
+        "properties": {
+            "physical": { "type": "string" },
+            "magical": { "type": "string" },
+            "true": { "type": "string" }
+        }
+        },
+        "critical_hits": {
+        "type": "object",
+        "properties": {
+            "chance_formula": { "type": "string" },
+            "damage_multiplier": { "type": "number" }
+        }
+        },
+        "status_application": {
+        "type": "object",
+        "properties": {
+            "resistance_formula": { "type": "string" },
+            "duration_modifiers": {
+            "type": "object",
+            "patternProperties": {
+                "^[a-z_]+$": { "type": "number" }
+            }
+            }
+        }
+        },
+        "combat_actions": {
+        "type": "array",
+        "items": {
+            "type": "string",
+            "enum": ["attack", "defend", "use_skill", "use_item", "flee"]
+        }
+        }
+    }
+    },
+    "status_effects": {
+    "type": "object",
+    "properties": {
+        "status_effects": {
+        "type": "object",
+        "patternProperties": {
+            "^[a-z_]+$": {
+            "type": "object",
+            "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                "type": "string",
+                "enum": ["positive", "negative", "neutral"]
+                },
+                "effects": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                    "timing": {
+                        "type": "string",
+                        "enum": ["start_of_turn", "end_of_turn", "on_action", "constant"]
+                    },
+                    "effect_type": {
+                        "type": "string",
+                        "enum": ["damage", "heal", "stat_modify", "prevent_action"]
+                    },
+                    "value_formula": { "type": "string" },
+                    "conditions": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                    }
+                    }
+                }
+                },
+                "duration": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                    "type": "string",
+                    "enum": ["turns", "steps", "permanent"]
+                    },
+                    "value": { "type": "integer" }
+                }
+                },
+                "cure_conditions": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["item", "skill", "rest", "time"]
+                    },
+                    "value": { "type": "string" }
+                    }
+                }
+                },
+                "stack_behavior": {
+                "type": "object",
+                "properties": {
+                    "stackable": { "type": "boolean" },
+                    "max_stacks": { "type": "integer" },
+                    "stack_effect": { "type": "string" }
+                }
+                }
+            },
+            "required": ["name", "description", "type", "effects", "duration"]
+            }
+        }
+        }
+    }
+    },
+    "crafting": {
+    "type": "object",
+    "properties": {
+        "recipes": {
+        "type": "object",
+        "patternProperties": {
+            "^[a-z_]+$": {
+            "type": "object",
+            "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "category": { "type": "string" },
+                "difficulty": { "type": "integer", "minimum": 1 },
+                "requirements": {
+                "type": "object",
+                "properties": {
+                    "skill_level": { "type": "integer", "minimum": 1 },
+                    "tools": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                    },
+                    "facility": { "type": "string" }
+                }
+                },
+                "ingredients": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                    "item_id": { "type": "string" },
+                    "amount": { "type": "integer", "minimum": 1 },
+                    "quality": {
+                        "type": "object",
+                        "properties": {
+                        "minimum": { "type": "integer", "minimum": 1 },
+                        "affects_result": { "type": "boolean" }
+                        }
+                    }
+                    },
+                    "required": ["item_id", "amount"]
+                }
+                },
+                "results": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                    "item_id": { "type": "string" },
+                    "amount": { "type": "integer", "minimum": 1 },
+                    "quality_formula": { "type": "string" },
+                    "success_rate": { "type": "number" }
+                    },
+                    "required": ["item_id", "amount"]
+                }
+                },
+                "time_required": { "type": "integer", "minimum": 1 },
+                "experience_reward": { "type": "integer", "minimum": 0 }
+            },
+            "required": ["name", "description", "ingredients", "results"]
+            }
+        }
+        },
+        "crafting_skills": {
+        "type": "object",
+        "patternProperties": {
+            "^[a-z_]+$": {
+            "type": "object",
+            "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "max_level": { "type": "integer" },
+                "level_effects": {
+                "type": "object",
+                "properties": {
+                    "quality_bonus": { "type": "string" },
+                    "speed_bonus": { "type": "string" },
+                    "success_rate_bonus": { "type": "string" }
+                }
+                }
+            }
+            }
+        }
+        }
+    }
+    }
+}

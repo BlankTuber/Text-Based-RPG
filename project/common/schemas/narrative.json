@@ -1,0 +1,548 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+    "objective": {
+        "type": "object",
+        "required": ["type", "description"],
+        "properties": {
+        "type": {
+            "type": "string",
+            "enum": ["collect", "deliver", "talk", "visit", "defeat", "protect", "escort", "investigate"]
+        },
+        "description": {
+            "type": "string"
+        },
+        "target": {
+            "type": "string"
+        },
+        "amount": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "location": {
+            "type": "string"
+        },
+        "time_limit": {
+            "type": "integer",
+            "description": "Time limit in game minutes, if applicable"
+        },
+        "optional": {
+            "type": "boolean",
+            "default": false
+        }
+        }
+    },
+    "reward": {
+        "type": "object",
+        "properties": {
+        "xp": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "gold": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "items": {
+            "type": "array",
+            "items": {
+            "type": "object",
+            "required": ["id", "amount"],
+            "properties": {
+                "id": {
+                "type": "string"
+                },
+                "amount": {
+                "type": "integer",
+                "minimum": 1
+                }
+            }
+            }
+        },
+        "reputation": {
+            "type": "object",
+            "additionalProperties": {
+            "type": "integer"
+            }
+        },
+        "skills": {
+            "type": "object",
+            "additionalProperties": {
+            "type": "integer"
+            }
+        }
+        }
+    },
+    "quest_stage": {
+        "type": "object",
+        "required": ["objectives"],
+        "properties": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "dialogue_id": {
+            "type": "string"
+        },
+        "objectives": {
+            "type": "array",
+            "items": {
+            "$ref": "#/definitions/objective"
+            }
+        },
+        "next_stage": {
+            "type": "string"
+        },
+        "failure_stage": {
+            "type": "string"
+        },
+        "time_limit": {
+            "type": "integer"
+        },
+        "requirements": {
+            "type": "object",
+            "properties": {
+            "level": {
+                "type": "integer",
+                "minimum": 1
+            },
+            "skills": {
+                "type": "object",
+                "additionalProperties": {
+                "type": "integer"
+                }
+            },
+            "items": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            },
+            "quests_completed": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            }
+            }
+        }
+        }
+    }
+    },
+    "quests": {
+    "title": "Quest Schemas",
+    "type": "object",
+    "properties": {
+        "main_quests": {
+        "type": "object",
+        "additionalProperties": {
+            "type": "object",
+            "required": ["title", "description", "stages", "rewards"],
+            "properties": {
+            "title": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "quest_giver": {
+                "type": "string"
+            },
+            "level_requirement": {
+                "type": "integer",
+                "minimum": 1
+            },
+            "prerequisite_quests": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            },
+            "stages": {
+                "type": "object",
+                "additionalProperties": {
+                "$ref": "#/definitions/quest_stage"
+                }
+            },
+            "rewards": {
+                "$ref": "#/definitions/reward"
+            },
+            "is_repeatable": {
+                "type": "boolean",
+                "default": false
+            },
+            "cooldown": {
+                "type": "integer",
+                "description": "Time in game days before quest can be repeated"
+            },
+            "failure_conditions": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            },
+            "tags": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            }
+            }
+        }
+        },
+        "side_quests": {
+        "type": "object",
+        "additionalProperties": {
+            "type": "object",
+            "required": ["title", "description", "stages", "rewards"],
+            "properties": {
+            "title": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "quest_giver": {
+                "type": "string"
+            },
+            "level_requirement": {
+                "type": "integer",
+                "minimum": 1
+            },
+            "stages": {
+                "type": "object",
+                "additionalProperties": {
+                "$ref": "#/definitions/quest_stage"
+                }
+            },
+            "rewards": {
+                "$ref": "#/definitions/reward"
+            },
+            "is_repeatable": {
+                "type": "boolean",
+                "default": true
+            },
+            "time_limited": {
+                "type": "boolean",
+                "default": false
+            },
+            "available_locations": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            }
+            }
+        }
+        }
+    }
+    },
+    "dialogues": {
+    "title": "Dialogue Schemas",
+    "type": "object",
+    "properties": {
+        "npc_dialogues": {
+        "type": "object",
+        "additionalProperties": {
+            "type": "object",
+            "required": ["npc_id", "dialogues"],
+            "properties": {
+            "npc_id": {
+                "type": "string"
+            },
+            "default_mood": {
+                "type": "string",
+                "enum": ["friendly", "neutral", "hostile"]
+            },
+            "dialogues": {
+                "type": "object",
+                "additionalProperties": {
+                "type": "object",
+                "required": ["text", "responses"],
+                "properties": {
+                    "text": {
+                    "type": "string"
+                    },
+                    "conditions": {
+                    "type": "object",
+                    "properties": {
+                        "reputation": {
+                        "type": "integer"
+                        },
+                        "quest_state": {
+                        "type": "string"
+                        },
+                        "has_items": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                        }
+                    }
+                    },
+                    "responses": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": ["text", "next_dialogue"],
+                        "properties": {
+                        "text": {
+                            "type": "string"
+                        },
+                        "next_dialogue": {
+                            "type": "string"
+                        },
+                        "action": {
+                            "type": "string"
+                        },
+                        "requirement": {
+                            "type": "object",
+                            "properties": {
+                            "skill": {
+                                "type": "string"
+                            },
+                            "level": {
+                                "type": "integer"
+                            }
+                            }
+                        }
+                        }
+                    }
+                    }
+                }
+                }
+            }
+            }
+        }
+        },
+        "quest_dialogues": {
+        "type": "object",
+        "additionalProperties": {
+            "type": "object",
+            "required": ["quest_id", "stages"],
+            "properties": {
+            "quest_id": {
+                "type": "string"
+            },
+            "stages": {
+                "type": "object",
+                "additionalProperties": {
+                "type": "object",
+                "required": ["dialogue_sequences"],
+                "properties": {
+                    "dialogue_sequences": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": ["speaker", "text"],
+                        "properties": {
+                        "speaker": {
+                            "type": "string"
+                        },
+                        "text": {
+                            "type": "string"
+                        },
+                        "emotion": {
+                            "type": "string"
+                        },
+                        "actions": {
+                            "type": "array",
+                            "items": {
+                            "type": "string"
+                            }
+                        }
+                        }
+                    }
+                    }
+                }
+                }
+            }
+            }
+        }
+        }
+    }
+    },
+    "events": {
+    "title": "Event Schema",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "required": ["type", "trigger_conditions", "actions"],
+        "properties": {
+        "type": {
+            "type": "string",
+            "enum": ["story", "random", "scheduled", "triggered"]
+        },
+        "trigger_conditions": {
+            "type": "object",
+            "properties": {
+            "location": {
+                "type": "string"
+            },
+            "time": {
+                "type": "string"
+            },
+            "quest_stage": {
+                "type": "string"
+            },
+            "player_level": {
+                "type": "integer"
+            },
+            "items_owned": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            }
+            }
+        },
+        "actions": {
+            "type": "array",
+            "items": {
+            "type": "object",
+            "required": ["type", "parameters"],
+            "properties": {
+                "type": {
+                "type": "string",
+                "enum": ["spawn_npc", "modify_world", "start_dialogue", "give_quest", "modify_player"]
+                },
+                "parameters": {
+                "type": "object"
+                }
+            }
+            }
+        },
+        "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+        },
+        "one_time": {
+            "type": "boolean",
+            "default": false
+        }
+        }
+    }
+    },
+    "lore": {
+    "title": "Lore Schema",
+    "type": "object",
+    "properties": {
+        "world_history": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "required": ["era", "description"],
+            "properties": {
+            "era": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "key_events": {
+                "type": "array",
+                "items": {
+                "type": "object",
+                "required": ["title", "description"],
+                "properties": {
+                    "title": {
+                    "type": "string"
+                    },
+                    "description": {
+                    "type": "string"
+                    },
+                    "year": {
+                    "type": "string"
+                    },
+                    "locations": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                    },
+                    "related_npcs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                    }
+                }
+                }
+            }
+            }
+        }
+        },
+        "factions": {
+        "type": "object",
+        "additionalProperties": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+            "name": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "alignment": {
+                "type": "string"
+            },
+            "relationships": {
+                "type": "object",
+                "additionalProperties": {
+                "type": "integer",
+                "minimum": -100,
+                "maximum": 100
+                }
+            },
+            "territories": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            },
+            "notable_members": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            }
+            }
+        }
+        },
+        "books": {
+        "type": "object",
+        "additionalProperties": {
+            "type": "object",
+            "required": ["title", "content"],
+            "properties": {
+            "title": {
+                "type": "string"
+            },
+            "author": {
+                "type": "string"
+            },
+            "content": {
+                "type": "string"
+            },
+            "locations": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            },
+            "related_quests": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            }
+            }
+        }
+        }
+    }
+    }
+}
